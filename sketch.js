@@ -1,35 +1,64 @@
-var tableVar;
-var temps;
+var data;
+
+var estInc;
+
+var canvasX = 640;
+var canvasY = 360;
 
 function preload(){
-  tableVar = loadTable('PRSA-adapted-aparrish.csv', 'csv', 'header');
+  data = loadTable("report.csv","csv","header");
 }
 
 function setup() {
-  createCanvas(640,480);
+  createCanvas(canvasX,canvasY);
   background(50);
-  stroke(255);
   
-  temps = tableVar.getColumn("TEMP");
+  print("test");
   
-  var minTemp = min(temps);
-  var maxTemp = max(temps);
+  DisplayText();
+  EstimatedIncome();
+}
+
+function EstimatedIncome(){
+  stroke(0,220,0);
+  fill(0,220,0);
+  estInc = data.getColumn("Anslåtte inntekter (NOK)");
   
-  for(var i = 0; i < tableVar.getRowCount(); i++){
-    var val = tableVar.getNum(i,"TEMP");
+  var minVal = min(estInc);
+  var maxVal = max(estInc);
+  
+  for(var i = 0; i < estInc.length;i++){
+    var xpos = map(i,0,estInc.length,0+20,width);
+    var ypos = map(estInc[i],minVal,maxVal,height-20,20);
     
-    var xpos = map(i, 0, tableVar.getRowCount(), 0, width);
-    
-    var ypos =  map(val, minTemp, maxTemp, height, 0);
-    
+    strokeWeight(3);
     point(xpos,ypos);
+    
+    strokeWeight(1);
+    if(i != 0){
+      line(lastXPos,lastYPos,xpos,ypos)
+    }
+    
+    lastXPos = xpos;
+    lastYPos = ypos;
+    
   }
-  
-  stroke(255, 0, 0);
-  var zeroVal = map(0, minTemp, maxTemp, height, 0);
-  line(0, zeroVal, width, zeroVal);
+}
+
+function DisplayText(){
+  textSize(16);
+  fill(0,220,0);
+  stroke(0);
+  text('Income', 10, 50);
+  fill(255);
+  text('Press "Any Key" and move mouse to scale graph', 10, 30);
 }
 
 function draw(){
+  setup();
   
+  if(keyIsPressed === true){
+    canvasX = mouseX;
+    canvasY = mouseY;
+  }
 }
