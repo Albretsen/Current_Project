@@ -71,10 +71,16 @@ function move(x1,y1){
   
   grid[currPos[0]][currPos[1]] = 0;
   
-  currPos[0] = currPos[0] + x1;
-  currPos[1] = currPos[1] + y1;
+  if(currPos[0] + x1 <= -1 || currPos[0] + x1 >= cols || currPos[1] + y1 <= -1 || currPos[1] + y1 >= rows){
+    print("wall");
+  }
+  else{
+    currPos[0] = currPos[0] + x1;
+    currPos[1] = currPos[1] + y1;
+  }
   
   grid[currPos[0]][currPos[1]] = 1;
+ 
   
 }
 
