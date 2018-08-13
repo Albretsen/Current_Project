@@ -1,2 +1,2 @@
 # TestProj
-First GitHub website where I test javascript code.
+This site will display my latest projects.
