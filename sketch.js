@@ -1,4 +1,4 @@
-var cols = 40;
+var cols = 50;
 var rows = cols;
 
 var rectSize = 15;
@@ -9,12 +9,18 @@ var next;
 //course = new Object();
 var alive;
 
-var paused = false;
+var paused = true;
 
 var cellCount = 0;
 var genCount = 0;
 var bornCount = 0;
 var deathCount = 0;
+
+var cellCountPerGen = new Array(0);
+
+var enableGraph = true;
+var lastXPos;
+var lastYPos;
 
 function Cell(alive) {
   this.alive = 0;
@@ -32,6 +38,7 @@ function setup() {
 function mouseClicked() {
   if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
     cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
+    drawGrid();
     bornCount++;
   }
 }
@@ -39,6 +46,7 @@ function mouseClicked() {
 function mouseDragged() {
   if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
     cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
+    drawGrid();
     bornCount++;
   }
 }
@@ -52,6 +60,7 @@ function mousePressed() {
 setInterval(function() {
   if (!paused) {
     checkStates();
+    drawGrid();
     genCount++;
   }
 }, 500);
@@ -94,9 +103,29 @@ function checkStates() {
   var temp = cells;
   cells = next;
   next = temp;
+
+  cellCountPerGen.push(cellCount);
 }
 
 function drawGrid() {
+  background(255);
+  textSize(32);
+  fill(0, 102, 153);
+  strokeWeight(0);
+
+  if (paused) {
+    text('Paused', width / 2 - 60, 80);
+  }
+
+  textSize(16);
+  text('Cells: ' + cellCount, 10, 20);
+  text('Generation: ' + genCount, 10, 40);
+
+  text('Cells born: ' + bornCount, 150, 20);
+  text('Cells died: ' + deathCount, 150, 40);
+  
+  strokeWeight(1);
+
   var x = 0;
   var y = 100;
   cellCount = 0;
@@ -115,6 +144,30 @@ function drawGrid() {
     }
     x = 0;
     y += rectSize;
+  }
+
+  minCellCount = min(cellCountPerGen);
+  maxCellCount = max(cellCountPerGen);
+
+  if (enableGraph) {
+    for (var i = 0; i < cellCountPerGen.length; i++) {
+      var val = cellCountPerGen[i];
+      var xpos = map(i, 0, cellCountPerGen.length, 0, width);
+      var ypos = map(cellCountPerGen[i], minCellCount, maxCellCount, rectSize * rows, 0) + 100;
+
+      strokeWeight(1);
+      point(xpos, ypos);
+
+      strokeWeight(1);
+      if (i != 0) {
+        stroke(255, 0, 0);
+        line(lastXPos, lastYPos, xpos, ypos);
+        stroke(0);
+      }
+
+      lastXPos = xpos;
+      lastYPos = ypos;
+    }
   }
 
 }
@@ -142,26 +195,25 @@ function make2DArray() {
 function keyPressed() {
   if (keyCode === ENTER && !paused) {
     paused = true;
+    drawGrid();
   } else {
     paused = false;
+    drawGrid();
+  }
+}
+
+function keyTyped(){
+  if(key === 'g'){
+    if(enableGraph){
+      enableGraph = false;
+      drawGrid();
+    } else{
+      enableGraph = true;
+      drawGrid();
+    }
   }
 }
 
 function draw() {
-  background(255);
-  drawGrid();
-
-  textSize(32);
-  fill(0, 102, 153);
-
-  if (paused) {
-    text('Paused', width / 2 - 60, 80);
-  }
-
-  textSize(16);
-  text('Cells: ' + cellCount, 10, 20);
-  text('Generation: ' + genCount, 10, 40);
-
-  text('Cells born: ' + bornCount, 150, 20);
-  text('Cells died: ' + deathCount, 150, 40);
+  //background(255);
 }
