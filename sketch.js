@@ -1,119 +1,167 @@
-//Edit "cols" to change board size
-var cols = 50;
+var cols = 40;
 var rows = cols;
 
-//Alive chance is the likelyhood of a cell being alive when the game is first loaded
-//Refresh the game to load a new board
-var aliveChance = 0.1;
-
-//"rectSize" is the size of the cells
 var rectSize = 15;
 
-//"framerate" is how often the game updates per second. It can also be a decimal number
-var framerate = 10;
+var cells;
+var next;
+
+//course = new Object();
+var alive;
+
 var paused = false;
 
-//This is a 2 dimensional array. Every cells state is stored in this array.
-var grid;
+var cellCount = 0;
+var genCount = 0;
+var bornCount = 0;
+var deathCount = 0;
+
+function Cell(alive) {
+  this.alive = 0;
+}
 
 function setup() {
-  createCanvas(cols * rectSize + 1, rows * rectSize + 1);
-  frameRate(framerate);
+  createCanvas(rows * rectSize + 1, cols * rectSize + 1 + 100);
+  //createCanvas(1000, 1000);
 
-  grid = make2DArray();
-  populate();
+  cells = make2DArray();
+  next = make2DArray();
   drawGrid();
 }
 
-function draw() {
-  print("test");
-}
-
-function make2DArray() {
-  var arr = new Array(cols);
-  for (var i = 0; i < arr.length; i++) {
-    arr[i] = new Array(rows);
-  }
-  return arr;
-}
-
-function populate() {
-  for (var i = 0; i < cols; i++) {
-    for (var j = 0; j < rows; j++) {
-      if (random(1) <= aliveChance) {
-        grid[i][j] = 1;
-      } else {
-        grid[i][j] = 0;
-      }
-    }
+function mouseClicked() {
+  if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
+    cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
+    bornCount++;
   }
 }
 
-function changeState() {
-  for (var i = 0; i < cols; i++) {
-    for (var j = 0; j < rows; j++) {
-      if (i - 1 < 0 || i + 1 >= cols || j - 1 < 0 || j + 1 >= rows) {
+function mouseDragged() {
+  if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
+    cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
+    bornCount++;
+  }
+}
 
-      } else {
-        var sum = 0;
-        for (var x = -1; x < 2; x++) {
-          for (var z = -1; z < 2; z++) {
+function mousePressed() {
+  if (mouseButton === RIGHT) {
+    print("test");
+  }
+}
 
-            var col = (x + i + cols) % cols;
-            var row = (z + j + rows) % rows;
+setInterval(function() {
+  if (!paused) {
+    checkStates();
+    genCount++;
+  }
+}, 500);
 
-            sum += grid[col][row];
-            //sum += grid[i+x][j+z];
-          }
-        }
-        sum -= grid[i][j];
-        var state = grid[i][j];
+function checkStates() {
+  for (var x = 0; x < cols; x++) {
+    for (var y = 0; y < rows; y++) {
 
-        if (state == 0 && sum == 3) {
-          grid[i][j] = 1;
-        } else if (state == 1 && (sum < 2 || sum > 3)) {
-          grid[i][j] = 0;
-        } else {
-          grid[i][j] = state;
+      var neighbors = 0;
+
+      for (var i = -1; i <= 1; i++) {
+        for (var j = -1; j <= 1; j++) {
+
+          var col = (x + i + cols) % cols;
+          var row = (y + j + rows) % rows;
+
+          //neighbors += cells[x + i][y + j].alive;
+          neighbors += cells[col][row].alive;
         }
       }
+
+      neighbors -= cells[x][y].alive;
+
+      if ((cells[x][y].alive == 1) && (neighbors < 2)) {
+        next[x][y].alive = 0;
+        deathCount++;
+      } else if ((cells[x][y].alive == 1) && (neighbors > 3)) {
+        next[x][y].alive = 0;
+        deathCount++;
+      } else if ((cells[x][y].alive == 0) && (neighbors == 3)) {
+        next[x][y].alive = 1;
+        bornCount++;
+      } else {
+        next[x][y].alive = cells[x][y].alive;
+      }
+
     }
   }
+
+  var temp = cells;
+  cells = next;
+  next = temp;
 }
 
 function drawGrid() {
-  fill(255);
-  stroke(0);
-
   var x = 0;
-  var y = 0;
+  var y = 100;
+  cellCount = 0;
+  for (var j = 0; j < rows; j++) {
+    for (var z = 0; z < cols; z++) {
 
-  for (var i = 0; i < cols; i++) {
-    for (var j = 0; j < rows; j++) {
-      if (grid[i][j] == 1) {
+      if (cells[j][z].alive) {
+        cellCount++;
         fill(0);
+      } else {
+        fill(255);
       }
+
       rect(x, y, rectSize, rectSize);
-      fill(255);
       x += rectSize;
     }
     x = 0;
     y += rectSize;
   }
 
-  changeState();
+}
+
+function make2DArray() {
+  var arr = new Array(cols);
+
+  for (var i = 0; i < arr.length; i++) {
+    arr[i] = new Array(rows);
+  }
+
+  for (var j = 0; j < cols; j++) {
+    for (var z = 0; z < rows; z++) {
+      if (i == 0 || z == 0 || i == cols - 1 || z == rows - 1) {
+        arr[j][z] = new Cell(0);
+      } else {
+        arr[j][z] = new Cell(0);
+      }
+    }
+  }
+
+  return arr;
 }
 
 function keyPressed() {
   if (keyCode === ENTER && !paused) {
     paused = true;
-  }else{
+  } else {
     paused = false;
   }
 }
 
 function draw() {
-  if (!paused) {
-    drawGrid();
+  background(255);
+  drawGrid();
+
+  textSize(32);
+  fill(0, 102, 153);
+
+  if (paused) {
+    text('Paused', width / 2 - 60, 80);
   }
+
+  textSize(16);
+  text('Cells: ' + cellCount, 10, 20);
+  text('Generation: ' + genCount, 10, 40);
+
+  text('Cells born: ' + bornCount, 150, 20);
+  text('Cells died: ' + deathCount, 150, 40);
 }
