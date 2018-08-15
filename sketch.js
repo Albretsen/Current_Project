@@ -28,6 +28,7 @@ function Cell(alive) {
 
 function setup() {
   createCanvas(rows * rectSize + 1, cols * rectSize + 1 + 100);
+  cellCountPerGen.push(0);
   //createCanvas(1000, 1000);
 
   cells = make2DArray();
@@ -44,16 +45,28 @@ function mouseClicked() {
 }
 
 function mouseDragged() {
-  if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
-    cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
-    drawGrid();
-    bornCount++;
+  if (mouseButton === LEFT) {
+    if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 0) {
+      cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 1;
+      drawGrid();
+      bornCount++;
+    }
+  } else{
+    if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 1) {
+      cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 0;
+      drawGrid();
+      deathCount++;
+    }
   }
 }
 
 function mousePressed() {
   if (mouseButton === RIGHT) {
-    print("test");
+    if (cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive == 1) {
+      cells[floor(map(mouseY, 100, height, 0, rows))][floor(map(mouseX, 0, width, 0, cols))].alive = 0;
+      drawGrid();
+      deathCount++;
+    }
   }
 }
 
@@ -123,7 +136,7 @@ function drawGrid() {
 
   text('Cells born: ' + bornCount, 150, 20);
   text('Cells died: ' + deathCount, 150, 40);
-  
+
   strokeWeight(1);
 
   var x = 0;
@@ -202,12 +215,12 @@ function keyPressed() {
   }
 }
 
-function keyTyped(){
-  if(key === 'g'){
-    if(enableGraph){
+function keyTyped() {
+  if (key === 'g') {
+    if (enableGraph) {
       enableGraph = false;
       drawGrid();
-    } else{
+    } else {
       enableGraph = true;
       drawGrid();
     }
