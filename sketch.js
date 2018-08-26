@@ -12,7 +12,8 @@ var sentence = "";
 var voice = new p5.Speech();
 
 function setup() {
-  voice.speak("Made by Asgeir");
+  createCanvas(640,360);
+  voice.speak("Speech generator by Albertsen");
   
   for(var i = 0; i < wordList.length; i++){
     wordList[i] = generator();
@@ -21,6 +22,8 @@ function setup() {
   wordAssembler();
   sentenceAssembler();
   voice.speak(sentence);
+  textSize(16);
+  text(sentence, 10, 30);
 }
 
 function sentenceAssembler(){
