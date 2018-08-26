@@ -6,18 +6,31 @@ var consonants = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q
 
 var wordAmount = 10;
 var wordList = new Array(wordAmount);
+var sentence = "";
 
 //VOICE
 var voice = new p5.Speech();
 
 function setup() {
-  voice.speak("Hi there");
+  voice.speak("Made by Asgeir");
   
   for(var i = 0; i < wordList.length; i++){
     wordList[i] = generator();
     word = new Array(floor(random(2,11)));
   }
   wordAssembler();
+  sentenceAssembler();
+  voice.speak(sentence);
+}
+
+function sentenceAssembler(){
+  for(var i = 0; i < wordList.length; i++){
+    if(i === 0){
+      sentence = wordList[i];
+    }else{
+      sentence = sentence + ", " + wordList[i];  
+    }
+  }
 }
 
 function wordAssembler(){
