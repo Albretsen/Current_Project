@@ -13,6 +13,7 @@ var voice = new p5.Speech();
 
 function setup() {
   createCanvas(640,360);
+  voice.setLang("nb-NO");
   voice.speak("Speech generator by Albertsen");
   
   for(var i = 0; i < wordList.length; i++){
