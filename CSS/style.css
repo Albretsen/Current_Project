@@ -1,93 +1,217 @@
 body{
-	background-color: #f4f4f4;
-	color: #555;
-	font-family: Roboto, Arial, Helvetica, sans-serif;
-	font-size: 16px;
-	line-height: 1.6em;
-	margin:0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	line-height: 1.5em;
+	padding: 0;
+	margin: 0;
+	background-color: #f4f4f4
 }
 
+/* Global */
 .container{
 	width: 80%;
 	margin: auto;
 	overflow: hidden;
 }
 
-#main-header{
-	background-color: coral;
+ul{
+	margin: 0;
+	padding: 0;
+}
+
+.button_1{
+	height: 38px;
+	background: #e8491d;
+	border: none;
+	padding-left: 20px;
+	padding-right: 20px;
 	color: white;
 }
 
-#navbar{
-	background-color: #333;
-	color: #fff;
+.dark{
+	padding: 15px;
+	background: #35424a;
+	color: white;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
-#navbar ul{
-	padding: 0;
-	list-style: none;
+
+/* Header */
+header{
+	background: #35424a;
+	color: white;
+	padding-top: 30px;
+	min-height: 50px;
+	border-bottom: #e8491d 3px solid;
 }
 
-#navbar li{
-	display: inline;
-}
-
-#navbar a{
-	color: #fff;
+header a{
+	color: white;
 	text-decoration: none;
-	font-size: 18px;
-	padding-right: 15px;
+	text-transform: uppercase;
+	font-size: 16px;
 }
 
+header li{
+	float: left;
+	display: inline;
+	padding: 0 20px 0 20px;
+}
+
+header #branding{
+	float: left;
+	height: 30px;
+}
+
+header #branding h1{
+	margin: 0;
+}
+
+header nav{
+	float: right;
+}
+
+header .highlight, header .current a{
+	color: #e8491d;
+	font-weight: bold;
+}
+
+header a:hover{
+	color: #cccccc;
+}
+
+/* Showcase */
 #showcase{
-	background-image:url('../images/showcase.jpg');
-	background-position: center right;
-	min-height: 300px;
-	margin-bottom: 30px;
+	min-height: 400px;
+	background: url(../images/showcase.jpg) no-repeat 0;
+	background-size: auto;
 	text-align: center;
+	color: white;
 }
 
 #showcase h1{
-	color: #fff;
-	font-size: 50px;
-	line-height: 1.6em;
-	padding-top: 30px;
+	margin-top: 125px;
+	font-size: 55px;
+	margin-bottom: 10px;
+	line-height: 1em;
 }
 
-#main{
-	float:left;
-	width: 70%;
-	padding: 0 30px;
-	box-sizing: border-box;
+#showcase p{
+	font-size: 20px;
 }
 
-#sidebar{
-	float:right;
-	width: 30%;
-	background: #333;
-	color: #fff;
+/* Newsletter */
+
+#newsletter{
+	padding: 15px;
+	color: white;
+	background: #35424a;
+}
+
+#newsletter h1{
+	float: left;
+}
+
+#newsletter form{
+	float: right;
+	margin-top: 10px;
+}
+
+#newsletter input[type="email"]{
+	padding: 4px;
+	height: 25px;
+	width: 250px;
+}
+
+/* Boxes */
+#boxes{
+	margin-top: 20px;
+}
+
+#boxes .box{
+	float: left;
+	width: 33%;
 	padding: 10px;
+	text-align: center;
 	box-sizing: border-box;
 }
 
-#main-footer{
-	background: #333;
-	color: #fff;
-	text-align: center;
+#boxes .box img{
+	width: 90px;
+}
+
+/* Sidebar */
+aside#sidebar{
+	float: right;
+	width: 30%;
+	margin-top: 10px;
+}
+
+aside#sidebar .qoute input, aside#sidebar .qoute textarea{
+	width: 90%;
+	padding: 5px;
+}
+
+/* Main column */
+article#main-col{
+	float: left;
+	width: 65%;
+}
+
+/* Services */
+ul#services li{
+	list-style: none;
 	padding: 20px;
-	margin-top: 40px;
-	position: fixed;
-	bottom: 0;
+	border: #ccc solid 1px;
+	margin-bottom: 5px;
+	background: #e6e6e6;
+}
+
+/* Footer */
+footer{
+	padding: 20px;
+	margin-top: 20px;
+	color: white;
+	background-color: #e8491d;
+	text-align: center;
+	
 	width: 100%;
 }
 
-@media(max-width:800px){
-	#main{
-		width: 100%;
+/* Media Queries */
+@media(max-width: 768px){
+	header #branding, 
+	header nav, 
+	header nav li, 
+	#newsletter h1, 
+	#newsletter form, 
+	#boxes .box,
+	article#main-col,
+	aside#sidebar{
 		float: none;
+		text-align: center;
+		width:100%;
 	}
-	#sidebar{
+	header #branding{
+		font-size: 15px;
+		padding-bottom: 20px;
+	}
+	header nav{
+		padding-bottom: 20px;
+	}
+
+	#showcase h1{
+		margin-top: 80px;
+	}
+
+	#newsletter button, .qoute button{
+		display: block;
 		width: 100%;
-		float: none;
+	}
+
+	#newsletter form input[type="email"], .qoute input, .qoute textarea{
+		width: 100%;
+		margin-bottom: 5px;
 	}
 }
